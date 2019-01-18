@@ -1,7 +1,6 @@
 ﻿using LINQ.classes;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -22,6 +21,7 @@ namespace LINQ
             }
         }
 
+        // Main Menu
         public static bool MainMenu()
         {
             Console.Clear();
@@ -48,13 +48,14 @@ namespace LINQ
             }
             else if (result == "3")
             {
-
-
+                RemoveDuplicates();
+                return true;
 
             }
             else if (result == "4")
             {
-
+                ChainAllMethods();
+                    return true;
             }
             else if (result == "5")
             {
@@ -65,6 +66,11 @@ namespace LINQ
 
         }
 
+        // Return all neighborhoods
+        /// <summary>
+        /// Will query to the Json file and return all neighborhoods regardles of duplicates or whitespaces. Using a LINQ to query and distinct, 
+        /// which is a built in method to find a specific element in a sequence
+        /// </summary>
         public static void ReturnAll()
         {
             string data = "";
@@ -87,6 +93,10 @@ namespace LINQ
             Console.ReadLine();
         }
 
+        // Return all neighborhoods without whitespace
+        /// <summary>
+        /// Finding and searching for whitespace inside of neighborhoods, using a lamba expression to find.
+        /// </summary>
         public static void ReturnAllNoNullValue()
         {
             string data = "";
@@ -107,6 +117,66 @@ namespace LINQ
             Console.ReadLine();
          
 
+        }
+       
+        // Remove all duplicate neighborhoods
+        /// <summary>
+        /// Taking all of the neighborhoods and finding if any of the same type exists
+        /// </summary>
+        public static void RemoveDuplicates()
+        {
+            string data = "";
+            using (StreamReader r = new StreamReader(_filePath))
+            {
+                data = r.ReadToEnd();
+                //List<RootObject> List = JsonConvert.DeserializeObject<List<RootObject>>(_filePath);
+
+            }
+
+            RootObject items = JsonConvert.DeserializeObject<RootObject>(data);
+            // Groupby will go and group things from items>features and find properties>neighborhoods
+            //select the first in every grouped sequence of duplicates, form to a list and use distinct to return selected elements from that sequence
+            var distinctList = items.features.GroupBy(x => x.properties.neighborhood
+            )
+                         .Select(g => g.First())
+                         .ToList().Distinct();
+           
+            foreach (var item in distinctList)
+            {
+                
+                    Console.WriteLine($"{item.properties.neighborhood}");
+            }
+
+            Console.ReadLine();
+        }
+        /// <summary>
+        /// Using all previous methods to work as one
+        /// </summary>
+        public static void ChainAllMethods()
+        {
+            string data = "";
+            using (StreamReader r = new StreamReader(_filePath))
+            {
+                data = r.ReadToEnd();
+                //List<RootObject> List = JsonConvert.DeserializeObject<List<RootObject>>(_filePath);
+
+            }
+
+            RootObject items = JsonConvert.DeserializeObject<RootObject>(data);
+
+            var distinctList = items.features.Where(s => !string.IsNullOrWhiteSpace(s.properties.neighborhood)
+            )
+                         .GroupBy(x => x.properties.neighborhood)
+                         .Select(g => g.First())
+                         .ToList().Distinct();
+
+            foreach (var item in distinctList)
+            {
+
+                Console.WriteLine($"{item.properties.neighborhood}");
+            }
+
+            Console.ReadLine();
         }
     }
 }
