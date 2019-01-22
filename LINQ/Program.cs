@@ -9,7 +9,7 @@ namespace LINQ
     public class Program
     {
         // File path
-        private static readonly string _filePath = @"C:\Code\Lab08-LINQ\Lab08-LINQ\LINQ\json1.json";
+        private static readonly string _filePath = "../../../json1.json";
 
         static void Main(string[] args)
         {
@@ -109,6 +109,7 @@ namespace LINQ
 
             RootObject items = JsonConvert.DeserializeObject<RootObject>(data);
             var Word = items.features.Where(s => !string.IsNullOrWhiteSpace(s.properties.neighborhood)).Distinct().ToList();
+
             foreach (var item in Word)
             {
                 Console.WriteLine($"{item.properties.neighborhood}");

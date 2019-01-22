@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LINQ.classes
+﻿namespace LINQ.classes
 {
-   public class Properties
+    public class Properties
     {
         public string zip { get; set; }
         public string city { get; set; }
